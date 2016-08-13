@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Potential Waffle</string>
+    <string name="local_directory">Local directory:</string>
+    <string name="local_directory_button">Select</string>
+    <string name="server_address">Address:</string>
+    <string name="server_port_number">Port:</string>
+    <string name="sync_button">Sync!</string>
+
+    <string name="directory_chooser_select">Select</string>
 </resources>

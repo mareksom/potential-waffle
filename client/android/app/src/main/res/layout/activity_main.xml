@@ -1,16 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="pl.mareksom.potentialwaffle.MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+    android:layout_margin="15dp"
+    android:stretchColumns="2">
+    <TableRow>
+        <TextView
+            android:text="@string/local_directory"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:text="@string/local_directory_button"
+            android:onClick="selectLocalDirectory"/>
+        <TextView
+            android:text=""
+            android:id="@+id/local_directory_path"
+            android:focusable="true"
+            android:clickable="true"
+            android:focusableInTouchMode="true"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="@string/server_address"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/edit_server_address"
+            android:layout_span="2"
+            android:digits="0123456789."
+            android:inputType="number"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="@string/server_port_number"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/edit_server_port_number"
+            android:layout_span="2"
+            android:digits="1234567890"
+            android:inputType="number"/>
+    </TableRow>
+    <TableRow
+        android:gravity="right">
+        <Button
+            android:text="@string/sync_button"
+            android:onClick="sync"/>
+    </TableRow>
+    <TableRow>
+        <LinearLayout
+            android:layout_span="3"
+            android:orientation="vertical">
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.ProgressBar.Horizontal"/>
+            <TextView
+                android:id="@+id/progress_bar_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </TableRow>
+    <TableRow>
+        <ScrollView
+            android:id="@+id/log_view_scroll"
+            android:layout_span="3">
+            <TextView
+                android:id="@+id/log_view"
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </ScrollView>
+    </TableRow>
+</TableLayout>
