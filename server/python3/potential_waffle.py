@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from netifaces import interfaces, ifaddresses, AF_INET
 from termcolors import *
 import dir_descriptor
 import os
@@ -37,6 +38,16 @@ sock.bind(server_address)
 
 sock.listen(1)
 
+def ip4_addresses():
+  ip_list = []
+  for interface in interfaces():
+    try:
+      for link in ifaddresses(interface)[AF_INET]:
+        ip_list.append("({}) {}".format(interface, link['addr']))
+    except KeyError:
+      pass
+  return ip_list
+
 # Reads exactly n bytes from the connection.
 def read_n_bytes(connection, n):
   b = b''
@@ -61,6 +72,9 @@ def write_file(connection, path):
     file_size = f.tell()
     f.seek(0)
     write_integer(connection, file_size)
+    if file_size > 1024 * 1024 * 1024:
+      print(RED("File's size is over 1GiB."))
+      return
     while True:
       chunk = f.read(FILE_CHUNK_SIZE)
       if len(chunk) == 0:
@@ -68,13 +82,14 @@ def write_file(connection, path):
       while len(chunk) > 0:
         bytes_sent = connection.send(chunk)
         chunk = chunk[bytes_sent:]
+    print(GREEN("File was sent successfully."))
 
 def is_file_under_directory(file, directory):
   return os.path.realpath(file).startswith(os.path.realpath(directory))
 
 while True:
-  print(BLUE(("Waiting for a connection on port " + UNDERLINED("{}") + ".")
-      .format(sock.getsockname()[1])))
+  print(BLUE(("Waiting for a connection on {} port " + UNDERLINED("{}") + ".")
+      .format(ip4_addresses(), sock.getsockname()[1])))
   try:
     connection, client_address = sock.accept()
   except KeyboardInterrupt:
@@ -108,7 +123,6 @@ while True:
           break
         if os.path.isfile(path):
           write_file(connection, path)
-          print(GREEN("File was sent successfully."))
         else:
           write_integer(connection, MAX_INTEGER)
           print(YELLOW("File doesn't exist."))
