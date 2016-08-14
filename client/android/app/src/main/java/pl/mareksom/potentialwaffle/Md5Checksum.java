@@ -5,19 +5,24 @@ import java.security.MessageDigest;
 
 public class Md5Checksum {
     public static byte[] createChecksum(File file, String filename, StatusUpdater statusUpdater) throws Exception {
-        statusUpdater.initProgress((int) (file.length() / 1024), "Computing checksum of " + filename);
+        statusUpdater.initProgress((int) (file.length() / 4096), "Computing checksum of " + filename);
         InputStream fis =  new FileInputStream(file);
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[4096];
         MessageDigest complete = MessageDigest.getInstance("MD5");
         int numRead;
         int totalRead = 0;
+        int lastProgress = 0;
         do {
             numRead = fis.read(buffer);
             totalRead += numRead;
             if (numRead > 0) {
                 complete.update(buffer, 0, numRead);
             }
-            statusUpdater.setProgress(totalRead / 1024);
+            int newProgress = totalRead / 4096;
+            if (newProgress != lastProgress) {
+                lastProgress = newProgress;
+                statusUpdater.setProgress(totalRead / 4096);
+            }
         } while (numRead != -1);
         fis.close();
         return complete.digest();
