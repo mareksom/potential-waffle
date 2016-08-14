@@ -14,13 +14,26 @@ def _check_isdir(root_directory):
 
 # Returns a list of all files, the returned paths are relative to the root
 # directory.
-def _list_files(root_directory):
+def _list_files_including_hidden_directories(root_directory):
   _check_isdir(root_directory)
   for subdir, dirs, files in os.walk(root_directory):
     for file in files:
       if not file.startswith('.'):
         # The file is not hidden.
         yield os.path.relpath(os.path.join(subdir, file), root_directory)
+
+def _list_files(root_directory):
+  for path in _list_files_including_hidden_directories(root_directory):
+    is_hidden = False
+    p = path
+    while p:
+      head, tail = os.path.split(p)
+      if tail.startswith('.'):
+        is_hidden = True
+        break
+      p = head
+    if not is_hidden:
+      yield path
 
 def _get_cache_file_name(root_directory):
   return os.path.join(root_directory, '.potential-waffle')
