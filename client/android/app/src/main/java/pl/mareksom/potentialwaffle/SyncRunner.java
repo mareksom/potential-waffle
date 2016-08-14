@@ -82,9 +82,42 @@ public class SyncRunner implements Runnable {
             DirDescriptor descriptor = DirDescriptor.create(directory, statusUpdater);
             connectToTheServer_(directory, address, port, descriptor);
             DirDescriptor.create(directory, statusUpdater);
+            deleteEmptyDirectories(directory, directory);
         } catch (DescriptorException e) {
             statusUpdater.log("DescriptorException:\n" + e.getMessage() + "\n");
             throw new SyncException(e.getMessage());
+        }
+    }
+
+    private void deleteEmptyDirectories(File mainDirectory, File directory) {
+        if (!directory.exists() || !directory.isDirectory()) {
+            return;
+        }
+        File[] files = directory.listFiles();
+        if (files == null) {
+            statusUpdater.log("Strange: directory.listFiles() returned null.\n");
+        }
+        boolean isEmpty = true;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                deleteEmptyDirectories(mainDirectory, file);
+            } else if (file.isFile()) {
+                if (file.isHidden()) {
+                    String relativePath = mainDirectory.toURI().relativize(file.toURI()).getPath();
+                    if (!relativePath.equals(".potential-waffle")) {
+                        deleteFile(mainDirectory, relativePath);
+                    }
+                }
+            }
+            if (file.exists()) {
+                isEmpty = false;
+            }
+        }
+        if (isEmpty) {
+            if (!directory.delete()) {
+                statusUpdater.log("Tried to delete, but failed: " +
+                        mainDirectory.toURI().relativize(directory.toURI()).getPath() + "\n");
+            }
         }
     }
 

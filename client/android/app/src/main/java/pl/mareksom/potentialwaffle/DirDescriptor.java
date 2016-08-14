@@ -135,6 +135,12 @@ public class DirDescriptor {
                 result.fileInfo_.put(relpath, fd);
             }
         }
+        for (String filename : cache_info.getAllFilenames()) {
+            if (result.getFileDescriptor(filename) == null) {
+                isAnythingNew = true;
+                statusUpdater.log("File was deleted: '" + filename + "'\n");
+            }
+        }
         if (!isAnythingNew) {
             statusUpdater.log("Directory descriptor is up to date.\n");
         } else {

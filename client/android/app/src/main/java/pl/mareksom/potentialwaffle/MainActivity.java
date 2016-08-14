@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        /*
                         getLog().append(message);
                         logViewScroll_.post(new Runnable() {
                             @Override
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                                 logViewScroll_.fullScroll(ScrollView.FOCUS_DOWN);
                             }
                         });
+                        */
                     }
                 });
             }
