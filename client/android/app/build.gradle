@@ -2,14 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
-
     defaultConfig {
         applicationId "pl.mareksom.potentialwaffle"
-        minSdkVersion 23
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 24
+        targetSdkVersion 28
+        versionCode 4
+        versionName '1.1'
     }
     buildTypes {
         release {
@@ -17,10 +15,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:24.1.1'
 }
